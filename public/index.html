@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог товаров</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Каталог товаров</h1>
+    <div id="products"></div>
+    <div class="admin-link">
+        <a href="admin.html">Перейти в панель администратора</a>
+    </div>
+
+    <script>
+        // Функция для загрузки товаров
+        function loadProducts() {
+            fetch('http://localhost:3000/api/products')
+                .then(response => response.json())
+                .then(data => {
+                    const productsDiv = document.getElementById('products');
+                    productsDiv.innerHTML = ''; // Очистка перед добавлением новых товаров
+                    data.forEach(product => {
+                        const productCard = document.createElement('div');
+                        productCard.className = 'product-card';
+                        productCard.innerHTML = `
+                            <h2>${product.name}</h2>
+                            <p class="price">Цена: ${product.price} руб.</p>
+                            <p>${product.description}</p>
+                        `;
+                        productsDiv.appendChild(productCard);
+                    });
+                });
+        }
+
+        // Загрузка товаров при загрузке страницы
+        window.onload = loadProducts;
+    </script>
+</body>
+</html>

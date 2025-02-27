@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель администратора</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Панель администратора</h1>
+    <div class="admin-buttons">
+        <button onclick="showAddProductForm()">Добавить товар</button>
+        <button onclick="showEditProductForm()">Редактировать товар</button>
+        <button onclick="deleteProduct()">Удалить товар</button>
+    </div>
+
+    <h2>Список товаров</h2>
+    <div id="products"></div>
+
+    <!-- Форма для добавления товара -->
+    <div id="addProductForm" style="display: none;">
+        <h3>Добавить товар</h3>
+        <input type="text" id="addProductName" placeholder="Название товара" required>
+        <input type="number" id="addProductPrice" placeholder="Цена" required>
+        <input type="text" id="addProductDescription" placeholder="Описание" required>
+        <button onclick="addProduct()">Сохранить</button>
+        <button onclick="hideAddProductForm()">Отмена</button>
+    </div>
+
+    <!-- Форма для редактирования товара -->
+    <div id="editProductForm" style="display: none;">
+        <h3>Редактировать товар</h3>
+        <input type="number" id="editProductId" placeholder="ID товара" required>
+        <input type="text" id="editProductName" placeholder="Новое название товара" required>
+        <input type="number" id="editProductPrice" placeholder="Новая цена" required>
+        <input type="text" id="editProductDescription" placeholder="Новое описание" required>
+        <button onclick="editProduct()">Сохранить изменения</button>
+        <button onclick="hideEditProductForm()">Отмена</button>
+    </div>
+
+    <script>
+        // Функция для загрузки товаров
+        function loadProducts() {
+            fetch('http://localhost:8080/api/products')
+                .then(response => response.json())
+                .then(data => {
+                    const productsDiv = document.getElementById('products');
+                    productsDiv.innerHTML = ''; // Очистка перед добавлением новых товаров
+                    data.forEach(product => {
+                        const productCard = document.createElement('div');
+                        productCard.className = 'product-card';
+                        productCard.innerHTML = `
+                            <h2>${product.name}</h2>
+                            <p class="price">Цена: ${product.price} руб.</p>
+                            <p>${product.description}</p>
+                            <p>ID: ${product.id}</p>
+                        `;
+                        productsDiv.appendChild(productCard);
+                    });
+                });
+        }
+
+        // Загрузка товаров при загрузке страницы
+        window.onload = loadProducts;
+
+        // Функция для добавления товара
+        function addProduct() {
+            const name = document.getElementById('addProductName').value;
+            const price = document.getElementById('addProductPrice').value;
+            const description = document.getElementById('addProductDescription').value;
+
+            const newProduct = {
+                name: name,
+                price: parseFloat(price),
+                description: description
+            };
+
+            fetch('http://localhost:8080/api/products', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newProduct)
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Товар добавлен успешно!');
+                    loadProducts();
+                    hideAddProductForm();
+                } else {
+                    alert('Ошибка при добавлении товара.');
+                }
+            });
+        }
+
+        // Функция для редактирования товара
+        function editProduct() {
+            const id = document.getElementById('editProductId').value;
+            const name = document.getElementById('editProductName').value;
+            const price = document.getElementById('editProductPrice').value;
+            const description = document.getElementById('editProductDescription').value;
+
+            const updatedProduct = {
+                name: name,
+                price: parseFloat(price),
+                description: description
+            };
+
+            fetch(`http://localhost:8080/api/products/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedProduct)
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Товар отредактирован успешно!');
+                    loadProducts();
+                    hideEditProductForm();
+                } else {
+                    alert('Ошибка при редактировании товара.');
+                }
+            });
+        }
+
+        // Функция для удаления товара
+        function deleteProduct() {
+            const id = prompt('Введите ID товара для удаления:');
+            if (id) {
+                fetch(`http://localhost:8080/api/products/${id}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Товар удален успешно!');
+                        loadProducts();
+                    } else {
+                        alert('Ошибка при удалении товара.');
+                    }
+                });
+            }
+        }
+
+        // Функции для управления формами
+        function showAddProductForm() {
+            document.getElementById('addProductForm').style.display = 'block';
+        }
+
+        function hideAddProductForm() {
+            document.getElementById('addProductForm').style.display = 'none';
+            document.getElementById('addProductName').value = '';
+            document.getElementById('addProductPrice').value = '';
+            document.getElementById('addProductDescription').value = '';
+        }
+
+        function showEditProductForm() {
+            document.getElementById('editProductForm').style.display = 'block';
+        }
+
+        function hideEditProductForm() {
+            document.getElementById('editProductForm').style.display = 'none';
+            document.getElementById('editProductId').value = '';
+            document.getElementById('editProductName').value = '';
+            document.getElementById('editProductPrice').value = '';
+            document.getElementById('editProductDescription').value = '';
+        }
+    </script>
+</body>
+</html>

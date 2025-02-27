@@ -1,0 +1,77 @@
+/* Общие стили для body */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+/* Заголовок страницы */
+h1 {
+    text-align: center;
+    margin: 20px 0;
+    color: #333;
+}
+
+/* Контейнер для карточек товаров */
+#products {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Стили для карточки товара */
+.product-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    padding: 15px;
+    width: 200px;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+/* Эффект при наведении на карточку товара */
+.product-card:hover {
+    transform: scale(1.05);
+}
+
+/* Стили для заголовка товара */
+.product-card h2 {
+    font-size: 18px;
+    margin: 10px 0;
+    color: #007BFF; /* Цвет заголовка */
+}
+
+/* Стили для описания товара */
+.product-card p {
+    font-size: 14px;
+    color: #555;
+}
+
+/* Стили для цены товара */
+.product-card .price {
+    font-size: 16px;
+    font-weight: bold;
+    color: #28a745; /* Цвет для цены */
+}
+
+/* Стили для кнопок управления товарами */
+.admin-buttons {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.admin-buttons button {
+    margin: 0 10px;
+    padding: 10px 15px;
+    font-size: 16px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
